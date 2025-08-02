@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ChatGPT Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #response { white-space: pre-wrap; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Chat with ChatGPT</h1>
+  <form id="chat-form">
+    <label for="user-input">Your Message:</label><br>
+    <input type="text" id="user-input" name="user-input" required style="width: 300px;"><br><br>
+    <button type="submit">Send</button>
+  </form>
+  <div id="response"></div>
+
+  <script>
+    const form = document.getElementById('chat-form');
+    const responseDiv = document.getElementById('response');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userInput = document.getElementById('user-input').value;
+
+      const apiKey = 'YOUR_OPENAI_API_KEY'; // Replace with your actual API key
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: userInput }]
+        })
+      });
+
+      const data = await response.json();
+      responseDiv.textContent = data.choices[0].message.content;
+    });
+  </script>
+</body>
+</html>
